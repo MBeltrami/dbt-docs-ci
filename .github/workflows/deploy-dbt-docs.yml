@@ -41,7 +41,7 @@ jobs:
       - name: Create profiles.yml
         run: |
           cat << EOF > ~/.dbt/profiles.yml
-          default:
+          ${{ secrets.DBT_PROJECT }}:
             target: prod
             outputs:
               prod:
@@ -52,6 +52,12 @@ jobs:
                 dataset: ${{ secrets.BIGQUERY_DATASET }}
                 threads: 4
                 priority: interactive
+                scopes:
+                - openid
+                - https://www.googleapis.com/auth/userinfo.email
+                - https://www.googleapis.com/auth/cloud-platform
+                - https://www.googleapis.com/auth/sqlservice.login
+                - https://www.googleapis.com/auth/drive
           EOF
         
       - name: Generate dbt docs
