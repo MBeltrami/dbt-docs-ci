@@ -30,24 +30,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install dbt-bigquery
-      
-      - name: Create profiles directory
-        run: mkdir -p ~/.dbt
-          
-      - name: Setup BigQuery credentials
-        run: |
-          echo '${{ secrets.BIGQUERY_CREDENTIALS }}' > ~/.dbt/keyfile.json
 
-      - name: Create profiles.yml
+      - name: Setup dbt configuration
         run: |
-          cat << EOF > ~/.dbt/profiles.yml
+          mkdir -p /home/runner/.dbt
+          echo '${{ secrets.BIGQUERY_CREDENTIALS }}' > /home/runner/.dbt/keyfile.json
+          cat << EOF > /home/runner/.dbt/profiles.yml
           ${{ secrets.DBT_PROJECT }}:
             target: prod
             outputs:
               prod:
                 type: bigquery
                 method: service-account
-                keyfile: ~/.dbt/keyfile.json
+                keyfile: /home/runner/.dbt/keyfile.json
                 project: ${{ secrets.BIGQUERY_PROJECT }}
                 dataset: ${{ secrets.BIGQUERY_DATASET }}
                 threads: 4
