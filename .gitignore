@@ -1,0 +1,8 @@
+.venv
+.vscode
+secrets
+logs
+
+target/
+dbt_packages/
+logs/
